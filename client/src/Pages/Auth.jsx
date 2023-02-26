@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { login } from "../axios";
+import { useNavigate } from "react-router-dom";
 
 const Auth = ({ setUser }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [signin, setSignin] = useState(true);
+  const navigate = useNavigate();
 
   console.log(formData);
   return (
@@ -14,10 +16,13 @@ const Auth = ({ setUser }) => {
             e.preventDefault();
             login(formData)
               .then((res) => {
-                console.log(res);
+                localStorage.setItem("user", JSON.stringify(res.data.user));
+                console.log(res.data.user);
+                setUser(res.data.user);
+                navigate("/");
               })
               .catch((err) => {
-                console.log(err);
+                console.log(err.response.data.message);
               });
           }}
           className="flex flex-col justify-center items-center  w-1/2 bg-primary p-5 rounded-2xl"

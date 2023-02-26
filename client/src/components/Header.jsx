@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ user, setUser }) => {
+  useEffect(() => {
+    if (localStorage.getItem("user") && !user) {
+      setUser(JSON.parse(localStorage.getItem("user")));
+    }
+  }, [user]);
+
   return (
     <div className="navbar bg-primary text-white">
       <div className="flex-none">
@@ -25,9 +31,19 @@ const Header = () => {
         <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
       </div>
       <Link to="/auth">
-        <button className="btn btn-success mx-10 tracking-widest text-white">
-          SING IN
-        </button>
+        {user ? (
+          <button
+            onClick={(e) => {
+              localStorage.removeItem("user");
+              setUser(null);
+            }}
+            className="btn btn-ghost"
+          >
+            Logout
+          </button>
+        ) : (
+          <button className="btn btn-ghost">Sing In</button>
+        )}
       </Link>
 
       <div className="flex-none">
