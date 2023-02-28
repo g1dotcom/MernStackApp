@@ -30,7 +30,7 @@ const Header = ({ user, setUser }) => {
       <div className="flex-1">
         <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
       </div>
-      <Link to="/auth">
+      <Link to="/">
         {user ? (
           <button
             onClick={(e) => {

@@ -4,6 +4,9 @@ import { useState } from "react";
 import Auth from "./Pages/Auth";
 import Home from "./Pages/Home";
 import Header from "./components/Header";
+
+import { Toaster } from "react-hot-toast";
+
 function App() {
   const [user, setUser] = useState(null);
 
@@ -11,9 +14,15 @@ function App() {
     <BrowserRouter>
       <Header user={user} setUser={setUser} />
       <Routes>
-        <Route path="/" element={<Home user={user} />} />
-        <Route path="/auth" element={<Auth setUser={setUser} />} />
+        <Route path="/home" element={<Home user={user} />} />
+        <Route path="/" element={<Auth setUser={setUser} />} />
       </Routes>
+      <Toaster
+        toastOptions={{
+          position: "top-right",
+          duration: 3000,
+        }}
+      />
     </BrowserRouter>
   );
 }
