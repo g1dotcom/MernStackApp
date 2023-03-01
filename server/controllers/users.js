@@ -1,11 +1,13 @@
 import express from "express";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import User from "../models/userModel.js";
+import userSchema from "../models/users.js";
 
 const router = express.Router();
 
-router.post("/signup", async (req, res) => {
+// http://localhost:5000/users/signup //
+
+export const signup = async (req, res) => {
   try {
     console.log(req.body);
     const { fullname, email, password, correctionPassword, phoneNumber } =
@@ -14,13 +16,13 @@ router.post("/signup", async (req, res) => {
     if (password !== correctionPassword)
       return res.status(400).json({ message: "Passwords do not match" });
 
-    const userExists = await User.findOne({ email });
+    const userExists = await userSchema.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const createdUser = await User.create({
+    const createdUser = await userSchema.create({
       fullname,
       email,
       password: hashedPassword,
@@ -31,12 +33,14 @@ router.post("/signup", async (req, res) => {
     console.log(error);
     return res.json({ message: "create user failed" });
   }
-});
+};
 
-router.post("/signin", async (req, res) => {
+// http://localhost:5000/users/signin //
+
+export const signin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await userSchema.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -48,6 +52,6 @@ router.post("/signin", async (req, res) => {
     console.log(error);
     return res.status(400).json({ message: "Login Failed" });
   }
-});
+};
 
 export default router;
